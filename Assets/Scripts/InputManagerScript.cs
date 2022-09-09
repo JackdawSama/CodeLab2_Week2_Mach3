@@ -1,33 +1,48 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class InputManagerScript : MonoBehaviour {
+public class InputManagerScript : MonoBehaviour 
+{
 
 	protected GameManagerScript gameManager;
 	protected MoveTokensScript moveManager;
 	protected GameObject selected = null;
 
-	public virtual void Start () {
+	public virtual void Start() 
+	{
 		moveManager = GetComponent<MoveTokensScript>();
 		gameManager = GetComponent<GameManagerScript>();
 	}
 		
-	public virtual void SelectToken(){
-		if(Input.GetMouseButtonDown(0)){
+	//for selecting token
+	public virtual void SelectToken()
+	{
+		//if mouse click, get the position and convert to world position
+		if(Input.GetMouseButtonDown(0))
+		{
 			Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			
+			//checks for mouse postion overlapping token collider
 			Collider2D collider = Physics2D.OverlapPoint(mousePos);
 
-			if(collider != null){
-				if(selected == null){
+			//if mouse is colliding
+			if(collider != null)
+			{
+				//and nothing else is selected, select current token
+				if(selected == null)
+				{
 					selected = collider.gameObject;
-				} else {
+				} else //otherwise, stores position of selected object and the target object
+				{
 					Vector2 pos1 = gameManager.GetPositionOfTokenInGrid(selected);
 					Vector2 pos2 = gameManager.GetPositionOfTokenInGrid(collider.gameObject);
 
-					if(Mathf.Abs((pos1.x - pos2.x) + (pos1.y - pos2.y)) == 1){
+					//checks for orthogonal tokens and sets up exchange manager
+					if(Mathf.Abs((pos1.x - pos2.x) + (pos1.y - pos2.y)) == 1)
+					{
 						moveManager.SetupTokenExchange(selected, pos1, collider.gameObject, pos2, true);
 					}
+					//sets the selected token to null
 					selected = null;
 				}
 			}

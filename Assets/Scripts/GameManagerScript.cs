@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameManagerScript : MonoBehaviour {
+public class GameManagerScript : MonoBehaviour 
+{
 
 	public int gridWidth = 8;
 	public int gridHeight = 8;
@@ -17,46 +18,71 @@ public class GameManagerScript : MonoBehaviour {
 	protected Object[] tokenTypes;
 	GameObject selected;
 
-	public virtual void Start () {
-		tokenTypes = (Object[])Resources.LoadAll("Tokens/");
-		gridArray = new GameObject[gridWidth, gridHeight];
-		MakeGrid();
-		matchManager = GetComponent<MatchManagerScript>();
+	//declaring/instantiating the tokens, the grid, and the managers
+	public virtual void Start () 
+	{
+		tokenTypes = (Object[])Resources.LoadAll("Tokens/"); //loads all token types
+		gridArray = new GameObject[gridWidth, gridHeight]; //instantiates the grid
+		MakeGrid(); //runs MakeGrid
+		matchManager = GetComponent<MatchManagerScript>(); //get managers
 		inputManager = GetComponent<InputManagerScript>();
 		repopulateManager = GetComponent<RepopulateScript>();
 		moveTokenManager = GetComponent<MoveTokensScript>();
 	}
 
-	public virtual void Update(){
-		if(!GridHasEmpty()){
-			if(matchManager.GridHasMatch()){
+	//checking grid
+	public virtual void Update()
+	{
+		//if grid is has no empties
+		if(!GridHasEmpty())
+		{
+			//if any matches, remove them
+			if(matchManager.GridHasMatch())
+			{
 				matchManager.RemoveMatches();
-			} else {
+			} else //otherwise, select token
+			{
 				inputManager.SelectToken();
 			}
-		} else {
-			if(!moveTokenManager.move){
+		} else //if grid has empties
+		{
+			//if moveTokenManger is not moving, start TokenMove
+			if(!moveTokenManager.move)
+			{
 				moveTokenManager.SetupTokenMove();
 			}
-			if(!moveTokenManager.MoveTokensToFillEmptySpaces()){
+			//if not moving tokens to fill empties, add new token
+			if(!moveTokenManager.MoveTokensToFillEmptySpaces())
+			{
 				repopulateManager.AddNewTokensToRepopulateGrid();
 			}
 		}
 	}
 
-	void MakeGrid() {
+	//make the grid
+	void MakeGrid() 
+	{
+		//create new grid game object
 		grid = new GameObject("TokenGrid");
-		for(int x = 0; x < gridWidth; x++){
-			for(int y = 0; y < gridHeight; y++){
+		//creates grid of certain size and adds tokens to grid
+		for(int x = 0; x < gridWidth; x++)
+		{
+			for(int y = 0; y < gridHeight; y++)
+			{
 				AddTokenToPosInGrid(x, y, grid);
 			}
 		}
 	}
 
+	//if the grid has any empties
 	public virtual bool GridHasEmpty(){
-		for(int x = 0; x < gridWidth; x++){
-			for(int y = 0; y < gridHeight ; y++){
-				if(gridArray[x, y] == null){
+		//checks each space in the grid, if any returns null, set this to true, else, false
+		for(int x = 0; x < gridWidth; x++)
+		{
+			for(int y = 0; y < gridHeight ; y++)
+			{
+				if(gridArray[x, y] == null)
+				{
 					return true;
 				}
 			}
@@ -65,11 +91,16 @@ public class GameManagerScript : MonoBehaviour {
 		return false;
 	}
 
-
-	public Vector2 GetPositionOfTokenInGrid(GameObject token){
-		for(int x = 0; x < gridWidth; x++){
-			for(int y = 0; y < gridHeight ; y++){
-				if(gridArray[x, y] == token){
+	//returns the position of the selected token in the grid
+	public Vector2 GetPositionOfTokenInGrid(GameObject token)
+	{
+		for(int x = 0; x < gridWidth; x++)
+		{
+			for(int y = 0; y < gridHeight ; y++)
+			{
+				//if there is a token, return the position
+				if(gridArray[x, y] == token)
+				{
 					return(new Vector2(x, y));
 				}
 			}
@@ -77,13 +108,19 @@ public class GameManagerScript : MonoBehaviour {
 		return new Vector2();
 	}
 		
-	public Vector2 GetWorldPositionFromGridPosition(int x, int y){
+	//gets the world position of the object based on the grid position
+	public Vector2 GetWorldPositionFromGridPosition(int x, int y)
+	{
+		//finds the center of the token and returns as position
 		return new Vector2(
 			(x - gridWidth/2) * tokenSize,
 			(y - gridHeight/2) * tokenSize);
 	}
 
-	public void AddTokenToPosInGrid(int x, int y, GameObject parent){
+	//adds token to specific location on grid
+	public void AddTokenToPosInGrid(int x, int y, GameObject parent)
+	{
+		//takes the world position and instantiates a token as game object in world position
 		Vector3 position = GetWorldPositionFromGridPosition(x, y);
 		GameObject token = 
 			Instantiate(tokenTypes[Random.Range(0, tokenTypes.Length)], 

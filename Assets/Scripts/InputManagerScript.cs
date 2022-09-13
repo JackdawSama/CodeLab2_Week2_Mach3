@@ -40,6 +40,7 @@ public class InputManagerScript : MonoBehaviour
 					//checks for orthogonal tokens and sets up exchange manager
 					if(Mathf.Abs((pos1.x - pos2.x) + (pos1.y - pos2.y)) == 1)
 					{
+						print("EXCHANGE TOKEN");
 						moveManager.SetupTokenExchange(selected, pos1, collider.gameObject, pos2, true);
 					}
 					//sets the selected token to null

@@ -224,6 +224,7 @@ public class MatchManagerScript : MonoBehaviour
 				}
 			}
 		}
+		//Debug.Log(numRemoved);
 		//returns the number of tokens removed
 		return numRemoved;
 	}

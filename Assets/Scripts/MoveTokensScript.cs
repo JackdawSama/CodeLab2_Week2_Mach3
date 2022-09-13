@@ -116,7 +116,7 @@ public class MoveTokensScript : MonoBehaviour
 	                                int endGridX, int endGridY,
 	                                GameObject token){
 	
-		Vector3 startPos = gameManager.GetWorldPositionFromGridPosition(startGridX, startGridY);
+		Vector3 startPos = gameManager.GetWorldPositionFromGridPosition(startGridX , startGridY);
 		Vector3 endPos = gameManager.GetWorldPositionFromGridPosition(endGridX, endGridY);
 
 		//lerps from start pos to end pos based on lerp percent

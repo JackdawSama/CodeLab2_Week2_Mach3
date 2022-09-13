@@ -38,7 +38,11 @@ public class InputManagerScript : MonoBehaviour
 					Vector2 pos2 = gameManager.GetPositionOfTokenInGrid(collider.gameObject);
 
 					//checks for orthogonal tokens and sets up exchange manager
-					if(Mathf.Abs((pos1.x - pos2.x) + (pos1.y - pos2.y)) == 1)
+
+					//NEW BUG FIX!
+					//Mathf.Abs was inititally giving the absolute value for the sum of pos1.x - pos2.x and pos1.y - pos2.y.
+					//When changing it to giving absolute values of pos1.x - pos2.y and pos1.y - posr2.y seperately and later summing them solved the diagonal switching bug
+					if((Mathf.Abs(pos1.x - pos2.x) + Mathf.Abs(pos1.y - pos2.y)) == 1)
 					{
 						print("EXCHANGE TOKEN");
 						moveManager.SetupTokenExchange(selected, pos1, collider.gameObject, pos2, true);

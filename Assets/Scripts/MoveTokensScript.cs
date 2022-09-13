@@ -32,8 +32,11 @@ public class MoveTokensScript : MonoBehaviour
 		//if move is happening
 		if(move)
 		{
+			//NEW BUG FIX!
+			//multiply lerpSpeed by time.deltaTime for consistancy,
+			//also changed the value in the inspector
 			//add lerp percent to lerp speed
-			lerpPercent += lerpSpeed;
+			lerpPercent += (lerpSpeed * Time.deltaTime);
 
 			//if lerp percent is greater than or equal to 1, set to 1
 			if(lerpPercent >= 1)
